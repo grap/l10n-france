@@ -101,7 +101,7 @@ openerp.l10n_fr_certification_pos = function(instance, local) {
                         // Try to get hash of saved orders, if required
                         var posOrderModel = new instance.web.Model('pos.order');
                         return posOrderModel.call(
-                            'read', [server_ids, ['pos_reference', 'l10n_fr_hash']], undefined
+                            'get_certification_information', [server_ids], undefined
                         ).then(function (results) {
                             var hash = false;
                             _.each(results, function(result){

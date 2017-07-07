@@ -43,3 +43,9 @@ class PosOrder(models.Model):
         res = super(PosOrder, self).action_paid()
         self.generate_hash()
         return res
+
+    @api.multi
+    def get_certification_information(self):
+        """This function is made to allow overload for custom module
+        like 'pos_order_load'"""
+        return self.read(['pos_reference', 'l10n_fr_hash'])
