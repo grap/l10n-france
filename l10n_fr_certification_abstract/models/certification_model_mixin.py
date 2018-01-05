@@ -81,7 +81,7 @@ class CertificationModelMixin(models.AbstractModel):
         locked_items = [x for x in self if x.l10n_fr_is_locked]
         if not locked_items:
             return
-        if 'state' in vals.keys():
+        if 'state' in vals.keys() and vals['state'] not in self._locked_state_list:
             raise UserError(_(
                 "According to the french law, you cannot modify the state"
                 " of the following items\n%s") % (

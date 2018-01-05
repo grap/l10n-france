@@ -10,7 +10,7 @@
     "version": "8.0.1.0.0",
     "category": "Tools",
     "website": "https://odoo-community.org/",
-    "author": "GRAP, Akretion, Odoo Community Association (OCA), OpenERP SA",
+    "author": "GRAP, Akretion, Odoo Community Association (OCA), Aunéor Conseil, OpenERP SA",
     "license": "AGPL-3",
     "depends": [
         "base",
