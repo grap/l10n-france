@@ -68,6 +68,19 @@ Depending of the settings, the french bills printed by the point of sale :
    :alt: Try me on Runbot
    :target: https://runbot.odoo-community.org/runbot/121/10.0
 
+Important Note
+==============
+
+- this module will change the behaviour of the point of sale. The print of the
+  bill is waiting the result of the creation of the pos.order. If you have no
+  connexion, the print will be done (or prevented, depending of the setting)
+  instantly. But if you have a bad connexion, or if the server takes a lot of
+  time during the `create_from_ui` process, the user will have to wait the end
+  of the process to make another action in another order.
+
+- If the default timeout of odoo is not enough (7.5 seconds), you can use
+  the module pos_timeout in the OCA / pos repository to change the value.
+
 Bug Tracker
 ===========
 

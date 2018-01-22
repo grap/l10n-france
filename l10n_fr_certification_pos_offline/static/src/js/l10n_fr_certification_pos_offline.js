@@ -11,6 +11,7 @@ odoo.define('l10n_fr_certification_pos_offline.models', function (require) {
     var devices = require('point_of_sale.devices');
     var models = require('point_of_sale.models');
     var screens = require('point_of_sale.screens');
+    var gui = require('point_of_sale.gui');
     var DataModel = require('web.DataModel');
     var core = require('web.core');
     var _t = core._t;
@@ -179,7 +180,6 @@ odoo.define('l10n_fr_certification_pos_offline.models', function (require) {
                 // Display the bill for printing
                 ReceiptScreenWidgetShowParent.apply(this, []);
             }
-            certification_deferred = null;
         },
     });
 
@@ -196,6 +196,7 @@ odoo.define('l10n_fr_certification_pos_offline.models', function (require) {
 
         // Overload Function
         print_receipt: function(receipt){
+
             var self = this;
             var setting = this.pos.config.l10n_fr_prevent_print;
             if (receipt){
@@ -218,18 +219,37 @@ odoo.define('l10n_fr_certification_pos_offline.models', function (require) {
         print_receipt_certification: function(receipt, setting, hash){
             if (!hash && ['hash_or_block', 'normal_or_block'].indexOf(setting) !== -1) {
                 // block the printing
-                this.pos.pos_widget.screen_selector.show_popup('error', {
-                    message: _t('Connection required'),
-                    comment: _t('Can not print the bill because your point of sale is currently offline'),
-                });
             } else {
                 // Add the according text
                 var changed_receipt = receipt.replace("__CERTIFICATION_TEXT__", prepare_certification_text(hash, setting));
                 // Print the bill
                 ProxyDevicePrintReceiptParent.apply(this, [changed_receipt]);
             }
-            certification_deferred = null;
         },
     });
+
+    /*************************************************************************
+        Extend gui.Gui:
+            Block the possibility to switch between two orders when receipt
+            is printing, forcing user to wait for the answer of the server.
+            (success / timeout / error).
+     */
+    var GuiParent = gui.Gui.prototype;
+    gui.Gui = gui.Gui.extend({
+        show_screen: function(screen_name, params, refresh, skip_close_popup) {
+            if (screen_name === 'receipt') {
+                $('.neworder-button').hide();
+                $('.select-order').hide();
+                $('.deleteorder-button').hide();
+            }
+            else {
+                $('.neworder-button').show();
+                $('.select-order').show();
+                $('.deleteorder-button').show();
+            }
+            return GuiParent.show_screen.apply(this, arguments);
+        },
+    });
+
 
 });
